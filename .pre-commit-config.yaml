@@ -28,7 +28,11 @@ repos:
     hooks:
     -   id: mypy
         args: [--config-file=pyproject.toml]
+        exclude: alembic/
         additional_dependencies: [
             "pydantic",
-            "fastapi"
+            "fastapi",
+            "pydantic_settings",
+            "dotenv",
+            "uvicorn",
         ]
