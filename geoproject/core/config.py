@@ -74,7 +74,8 @@ class ApplicationConfig(BaseSettings):
     @property
     def db_url(self):
         return f"postgresql+psycopg2:///./{self.db_name}"
-
+    def db_url(self):
+        return f"postgresql+psycopg2://{self.db_user}:{self.db_password}@localhost/{self.db_name}"
 
 @lru_cache()
 def get_settings() -> ApplicationConfig:
