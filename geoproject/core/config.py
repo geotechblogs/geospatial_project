@@ -68,7 +68,7 @@ class ApplicationConfig(BaseSettings):
             "title": self.title,
             "description": "NeoRPG game version",
             "version": self.version,
-        }
+            "description": "A FastAPI service for geospatial data processing.",
         return fastapi_kwargs
 
     @property
