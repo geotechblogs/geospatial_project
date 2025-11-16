@@ -12,18 +12,11 @@ jobs:
       - attach_workspace:
           at: *workspace-dir
       - checkout
-      - restore_cache:
-          keys:
-            - v1-poetry-venv-{{ checksum "poetry.lock" }}
       - run:
           name: "Install Dependencies"
           command: |
             poetry config virtualenvs.in-project true && \
             poetry install --no-interaction --no-ansi
-      - save_cache:
-          key: v1-poetry-venv-{{ checksum "poetry.lock" }}
-          paths:
-            - ".venv"
       - run:
           name: "Run pre-commit"
           command: |
