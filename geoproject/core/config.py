@@ -69,11 +69,10 @@ class ApplicationConfig(BaseSettings):
             "description": "NeoRPG game version",
             "version": self.version,
             "description": "A FastAPI service for geospatial data processing.",
+        }
         return fastapi_kwargs
 
     @property
-    def db_url(self):
-        return f"postgresql+psycopg2:///./{self.db_name}"
     def db_url(self):
         return f"postgresql+psycopg2://{self.db_user}:{self.db_password}@localhost/{self.db_name}"
 
