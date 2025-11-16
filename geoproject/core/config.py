@@ -25,6 +25,7 @@ class ApplicationConfig(BaseSettings):
     timeout: int = 240
     keep_alive: int = 5
     worker_class: str = "uvicorn.workers.UvicornWorker"
+    reload: bool = True
 
     # Fastapi
     debug: bool = False
