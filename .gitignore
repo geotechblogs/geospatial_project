@@ -36,3 +36,9 @@ MANIFEST
 
 # poetry
 poetry.lock
+
+# gemini-cli settings
+.gemini/
+
+# GitHub App credentials
+gha-creds-*.json
