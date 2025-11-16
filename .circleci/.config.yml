@@ -1,0 +1,28 @@
+version: 2.1
+
+workspace: &workspace-dir /tmp/workspace
+
+jobs:
+  build:
+    working_directory: *workspace-dir
+    docker:
+      - image: cimg/python:3.12
+        user: root
+    steps:
+      - attach_workspace:
+          at: *workspace-dir
+      - checkout
+      - run:
+          name: "Install Dependencies"
+          command: |
+            poetry config virtualenvs.in-project true && \
+            poetry install --no-interaction --no-ansi
+      - run:
+          name: "Run pre-commit"
+          command: |
+            pre-commit run --all-files
+
+workflows:
+  build-and-test:
+    jobs:
+      - build

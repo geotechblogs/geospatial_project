@@ -1,1 +1,38 @@
+#vscode files
+.vscode/
+
+# Environments
 geo-project_env/
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# poetry
+poetry.lock
