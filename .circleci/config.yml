@@ -15,7 +15,6 @@ jobs:
       - restore_cache:
           keys:
             - v1-poetry-venv-{{ checksum "poetry.lock" }}
-            - v1-poetry-venv-
       - run:
           name: "Install Dependencies"
           command: |
