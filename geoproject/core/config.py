@@ -25,7 +25,6 @@ class ApplicationConfig(BaseSettings):
     timeout: int = 240
     keep_alive: int = 5
     worker_class: str = "uvicorn.workers.UvicornWorker"
-    reload: bool = True
 
     # Fastapi
     debug: bool = False
@@ -67,7 +66,6 @@ class ApplicationConfig(BaseSettings):
             "openapi_url": self.openapi_url,
             "redoc_url": self.redoc_url,
             "title": self.title,
-            "description": "NeoRPG game version",
             "version": self.version,
             "description": "A FastAPI service for geospatial data processing.",
         }
@@ -76,6 +74,7 @@ class ApplicationConfig(BaseSettings):
     @property
     def db_url(self):
         return f"postgresql+psycopg2://{self.db_user}:{self.db_password}@localhost/{self.db_name}"
+
 
 @lru_cache()
 def get_settings() -> ApplicationConfig:

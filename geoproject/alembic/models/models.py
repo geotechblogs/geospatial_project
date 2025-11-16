@@ -1,9 +1,9 @@
 import sqlalchemy as sa
 from geoalchemy2 import Geometry
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base
+
 Base = declarative_base()
 
 
