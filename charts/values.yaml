@@ -4,7 +4,7 @@ app:
     repository: geoproject_fastapi
     tag: "latest"
     pullPolicy: IfNotPresent
-  
+
   service:
     type: NodePort # Use NodePort to easily access it on Minikube
     port: 80
@@ -21,7 +21,7 @@ postgresql:
     database: "geoproject_db"
     username: "geoproject_user"
     password: "password" # Change this for production
-    
+
   # These settings are good for Minikube to save resources
   primary:
     persistence:
