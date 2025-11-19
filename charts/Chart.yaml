@@ -1,0 +1,10 @@
+apiVersion: v2
+name: geoproject-chart
+description: A Helm chart for the GeoProject FastAPI app and its database.
+version: 0.1.0
+
+dependencies:
+  - name: postgresql
+    version: "14.2.4" # You can pick a more recent version
+    repository: "https://charts.bitnami.com/bitnami"
+    # This dependency will be configured in values.yaml

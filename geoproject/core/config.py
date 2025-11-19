@@ -14,12 +14,12 @@ class ApplicationConfig(BaseSettings):
     log_level: str = "INFO"
 
     workers_per_core: int = 1
-    max_workers: int = 2
+    max_workers: int = 1
     workers: int | None = min(
         workers_per_core * multiprocessing.cpu_count(), max_workers
     )
     host: str = "0.0.0.0"
-    port: int = 8001
+    port: int = 8000
     reload: bool = False
     graceful_timeout: int = 240
     timeout: int = 240
