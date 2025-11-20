@@ -1,7 +1,6 @@
 import sqlalchemy as sa
 from geoalchemy2 import Geometry
 from sqlalchemy.sql import func
-from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from datetime import datetime
 from uuid import UUID
@@ -9,8 +8,7 @@ from pydantic import ConfigDict, field_validator
 from shapely.geometry import shape
 from geoalchemy2 import WKTElement
 from typing import Dict
-
-Base = declarative_base()
+from geoproject.config.database import Base
 
 
 class DBLocations(Base):
