@@ -3,6 +3,8 @@ from geoalchemy2 import Geometry
 from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base
 
+from sqlalchemy.dialects.postgresql import UUID
+
 
 Base = declarative_base()
 
@@ -11,7 +13,7 @@ class Locations(Base):
     __tablename__ = "locations"
     __table_args__ = {"schema": "public"}
     location_id = sa.Column(
-        sa.String(), primary_key=True, server_default=sa.text("gen_random_uuid()")
+        UUID(as_uuid=True), primary_key=True, server_default=sa.text("gen_random_uuid()")
     )
     description = sa.Column(sa.String(255))
     timestamp = sa.Column(sa.DateTime(timezone=True), server_default=func.now())
