@@ -1,20 +1,17 @@
 from sqlalchemy.orm import Session
 from geoproject.models.locations import DBLocations
 from geoproject.config.database import get_session
-from geoproject.models.locations import LocationCreate, LocationUpdate, LocationResponse
+from geoproject.models.locations import LocationCreateUpdate, LocationResponse
 from fastapi import Depends
 from uuid import UUID
-from geoalchemy2 import WKTElement
 from geoalchemy2.shape import to_shape
 
 
 def create_location_service(
-    location: LocationCreate, db: Session = Depends(get_session)
+    location: LocationCreateUpdate, db: Session = Depends(get_session)
 ):
-    location_data = location.model_dump(exclude_unset=True)
-    wkt_geometry = WKTElement(location_data["geometry"], srid=4326)
     db_location = DBLocations(
-        description=location_data["description"], geometry=wkt_geometry
+        description=location.description, geometry=location.geometry
     )
     db.add(db_location)
     db.commit()
@@ -61,15 +58,18 @@ def get_location_by_id_service(location_id: UUID, db: Session = Depends(get_sess
 
 
 def update_location_service(
-    location_id: UUID, location: LocationUpdate, db: Session = Depends(get_session)
+    location_id: UUID,
+    location: LocationCreateUpdate,
+    db: Session = Depends(get_session),
 ):
+    location_data = location.model_dump(exclude_unset=True)
     db_location = (
         db.query(DBLocations)
         .filter(DBLocations.location_id == str(location_id))
         .first()
     )
-    db_location.description = location.description
-    db_location.geometry = location.geometry
+    db_location.description = location_data["description"]
+    db_location.geometry = location_data["geometry"]
     db.commit()
     db.refresh(db_location)
     geometry = to_shape(db_location.geometry).__geo_interface__

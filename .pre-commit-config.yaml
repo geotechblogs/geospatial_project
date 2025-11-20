@@ -35,4 +35,7 @@ repos:
             "pydantic_settings",
             "dotenv",
             "uvicorn",
+            "sqlalchemy",
+            "geoalchemy2",
+            "shapely",
         ]

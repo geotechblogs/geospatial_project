@@ -5,7 +5,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from datetime import datetime
 from uuid import UUID
-from pydantic import ConfigDict
+from pydantic import ConfigDict, field_validator
+from shapely.geometry import shape
+from geoalchemy2 import WKTElement
+from typing import Dict
 
 Base = declarative_base()
 
@@ -22,14 +25,24 @@ class DBLocations(Base):
     )
 
 
-class LocationCreate(BaseModel):
+class LocationCreateUpdate(BaseModel):
     description: str
-    geometry: str
+    geometry: WKTElement
 
+    model_config = ConfigDict(
+        from_attributes=True,
+        arbitrary_types_allowed=True,
+    )
 
-class LocationUpdate(BaseModel):
-    description: str
-    geometry: str
+    @field_validator("geometry", mode="before")
+    def validate_geometry(cls, geojson_data: Dict) -> WKTElement:
+        if not isinstance(geojson_data, Dict):
+            raise ValueError("Geometry must be a valid GeoJSON dictionary.")
+        try:
+            geometry = shape(geojson_data)
+            return WKTElement(geometry.wkt, srid=4326)
+        except Exception:
+            raise ValueError("Geometry must be a valid GeoJSON dictionary.")
 
 
 class LocationResponse(BaseModel):

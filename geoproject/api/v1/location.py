@@ -8,8 +8,7 @@ from geoproject.services.locations import (
     delete_location_service,
 )
 from geoproject.models.locations import (
-    LocationCreate,
-    LocationUpdate,
+    LocationCreateUpdate,
     LocationResponse,
     AllLocations,
 )
@@ -30,13 +29,15 @@ def get_location_by_id(location_id: UUID, db: Session = Depends(get_session)):
 
 
 @router.post("/", response_model=LocationResponse)
-def create_location(location: LocationCreate, db: Session = Depends(get_session)):
+def create_location(location: LocationCreateUpdate, db: Session = Depends(get_session)):
     return create_location_service(location, db)
 
 
 @router.put("/{location_id}", response_model=LocationResponse)
 def update_location(
-    location_id: UUID, location: LocationUpdate, db: Session = Depends(get_session)
+    location_id: UUID,
+    location: LocationCreateUpdate,
+    db: Session = Depends(get_session),
 ):
     return update_location_service(location_id, location, db)
 
