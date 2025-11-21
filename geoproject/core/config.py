@@ -46,6 +46,7 @@ class ApplicationConfig(BaseSettings):
     db_password: str = ""
     db_name: str = "postgres"
     db_port: int = 5432
+    db_host: str = "localhost"
 
     @property
     def loguru_kwargs(self) -> Dict[str, Any]:
@@ -74,7 +75,7 @@ class ApplicationConfig(BaseSettings):
 
     @property
     def db_url(self):
-        return f"postgresql+psycopg2://{self.db_user}:{self.db_password}@localhost:{self.db_port}/{self.db_name}"
+        return f"postgresql+psycopg2://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
 
 
 @lru_cache()
