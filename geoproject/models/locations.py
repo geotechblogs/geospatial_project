@@ -1,12 +1,11 @@
 import sqlalchemy as sa
-from geoalchemy2 import Geometry
+from geoalchemy2 import Geometry, WKTElement
 from sqlalchemy.sql import func
 from pydantic import BaseModel
 from datetime import datetime
 from uuid import UUID
 from pydantic import ConfigDict, field_validator
-from shapely.geometry import shape
-from geoalchemy2 import WKTElement
+from shapely.geometry import shape  # type: ignore
 from typing import Dict
 from geoproject.config.database import Base
 
