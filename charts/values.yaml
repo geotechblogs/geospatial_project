@@ -1,0 +1,32 @@
+# --- Your FastAPI App Configuration ---
+app:
+  image:
+    repository: geoproject_fastapi
+    tag: "latest"
+    pullPolicy: IfNotPresent
+
+  service:
+    type: NodePort # Use NodePort to easily access it on Minikube
+    port: 80
+    targetPort: 8000 # The port your FastAPI app runs on (e.g., uvicorn)
+
+# --- Database (PostgreSQL Sub-chart) Configuration ---
+postgresql:
+  # This is the magic flag to enable PostGIS
+  postgis:
+    enabled: true
+
+  # Set your database user, password, and db name
+  auth:
+    database: "geoproject_db"
+    username: "geoproject_user"
+    password: "password" # Change this for production
+
+  # These settings are good for Minikube to save resources
+  primary:
+    persistence:
+      size: 1Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
