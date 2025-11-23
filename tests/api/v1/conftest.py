@@ -30,7 +30,7 @@ def configured_mock_session():
 
 
 @pytest.fixture
-def configured_mock_get_all_locations() -> None:
+def configured_mock_get_all_locations():
     def mock_all_locations():
         return [
             DBLocations(
@@ -43,11 +43,10 @@ def configured_mock_get_all_locations() -> None:
 
     MOCK_DB_SESSION.reset_mock()
     MOCK_DB_SESSION.query.return_value.all.return_value = mock_all_locations()
-    return None
 
 
 @pytest.fixture
-def configured_mock_get_location_by_id() -> None:
+def configured_mock_get_location_by_id():
     def mock_get_location_by_id(location_id: uuid.UUID = uuid.uuid4()):
         return DBLocations(
             location_id=location_id,
@@ -60,7 +59,6 @@ def configured_mock_get_location_by_id() -> None:
     MOCK_DB_SESSION.query.return_value.filter.return_value.first.return_value = (
         mock_get_location_by_id()
     )
-    return None
 
 
 @pytest.fixture
