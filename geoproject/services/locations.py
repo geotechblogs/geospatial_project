@@ -76,8 +76,8 @@ def update_location_service(
     db_location = get_location_by_id(location_id, db)
     if not db_location:
         raise HTTPException(status_code=404, detail="Location not found")
-    db_location.description = location_data["description"]
-    db_location.geometry = location_data["geometry"]
+    db_location.description = location_data.get("description", db_location.description)
+    db_location.geometry = location_data.get("geometry", db_location.geometry)
     db.commit()
     db.refresh(db_location)
     geometry = to_shape(cast(WKTElement, db_location.geometry)).__geo_interface__

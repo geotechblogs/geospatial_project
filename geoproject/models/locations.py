@@ -4,9 +4,9 @@ from sqlalchemy.sql import func
 from pydantic import BaseModel
 from datetime import datetime
 from uuid import UUID
-from pydantic import ConfigDict, field_validator
+from pydantic import ConfigDict, field_validator, Field
 from shapely.geometry import shape  # type: ignore
-from typing import Dict
+from typing import Dict, Optional
 from geoproject.config.database import Base
 
 
@@ -24,7 +24,9 @@ class DBLocations(Base):
 
 class LocationCreateUpdate(BaseModel):
     description: str
-    geometry: WKTElement
+    geometry: Optional[WKTElement] = Field(
+        default_factory=lambda: WKTElement("POINT (0 0)", srid=4326)
+    )
 
     model_config = ConfigDict(
         from_attributes=True,
