@@ -8,28 +8,30 @@ from unittest.mock import MagicMock
 from geoproject.models.locations import DBLocations
 import uuid
 from datetime import datetime, timezone
-from shapely.geometry import Point
 from geoalchemy2 import WKTElement
+from sqlalchemy import Column
+from typing import cast
 
 MOCK_DB_SESSION = MagicMock(spec=Session)
+
 
 def override_get_session() -> Generator[Session, None, None]:
     yield MOCK_DB_SESSION
 
 
 @pytest.fixture
-def configured_mock_session() -> Generator[None, None, None]:
+def configured_mock_session() -> None:
     def mock_refresh(instance: DBLocations, *args, **kwargs):
-        instance.location_id = uuid.uuid4()
-        instance.timestamp = datetime.now(timezone.utc)
-        
+        instance.location_id = cast(Column[str], str(uuid.uuid4()))
+        instance.timestamp = cast(Column[datetime], datetime.now(timezone.utc))
+
     MOCK_DB_SESSION.reset_mock()
     MOCK_DB_SESSION.refresh.side_effect = mock_refresh
-    return
+    return None
 
 
 @pytest.fixture
-def configured_mock_get_all_locations() -> Generator[None, None, None]:
+def configured_mock_get_all_locations() -> None:
     def mock_all_locations():
         return [
             DBLocations(
@@ -39,13 +41,14 @@ def configured_mock_get_all_locations() -> Generator[None, None, None]:
                 geometry=WKTElement("POINT (102.0 0.5)", srid=4326),
             )
         ]
+
     MOCK_DB_SESSION.reset_mock()
     MOCK_DB_SESSION.query.return_value.all.return_value = mock_all_locations()
-    return
+    return None
 
 
 @pytest.fixture
-def configured_mock_get_location_by_id() -> Generator[None, None, None]:
+def configured_mock_get_location_by_id() -> None:
     def mock_get_location_by_id(location_id: uuid.UUID = uuid.uuid4()):
         return DBLocations(
             location_id=location_id,
@@ -53,9 +56,12 @@ def configured_mock_get_location_by_id() -> Generator[None, None, None]:
             description="Test Location",
             geometry=WKTElement("POINT (102.0 0.5)", srid=4326),
         )
+
     MOCK_DB_SESSION.reset_mock()
-    MOCK_DB_SESSION.query.return_value.filter.return_value.first.return_value = mock_get_location_by_id()
-    return
+    MOCK_DB_SESSION.query.return_value.filter.return_value.first.return_value = (
+        mock_get_location_by_id()
+    )
+    return None
 
 
 @pytest.fixture
