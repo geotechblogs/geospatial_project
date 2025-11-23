@@ -8,6 +8,19 @@ jobs:
     docker:
       - image: cimg/python:3.12
         user: root
+        environment:
+          - DB_USER=user
+          - DB_PASSWORD=password
+          - DB_NAME=postgres
+          - DB_PORT=5432
+      - image: postgres:15-alpine
+        environment:
+          - POSTGRES_USER=user
+          - POSTGRES_PASSWORD=password
+          - POSTGRES_DB=postgres
+          - POSTGRES_HOST=localhost
+          - POSTGRES_PORT=5432
+
     steps:
       - attach_workspace:
           at: *workspace-dir
@@ -17,6 +30,13 @@ jobs:
           command: |
             poetry config virtualenvs.in-project true && \
             poetry install --no-interaction --no-ansi
+      - run:
+          name: "Wait for database"
+          command: |
+            until psql -h localhost -U user -d postgres -c ";"; do
+              echo "Waiting for database..."
+              sleep 2
+            done
       - run:
           name: "Run pre-commit"
           command: |
