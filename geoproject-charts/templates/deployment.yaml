@@ -21,9 +21,9 @@ spec:
         - name: migrate-db
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
-          
+
           workingDir: /home/user/app
-          
+
           env:
             - name: DB_HOST
               value: {{ printf "%s-%s" .Release.Name "postgresql" }}
@@ -40,7 +40,7 @@ spec:
                   key: postgres-password
             - name: DATABASE_URL
               value: {{ printf "postgresql://%s:%s@%s:%s/%s" .Values.postgresql.auth.username "$(DB_PASSWORD)" "$(DB_HOST)" "$(DB_PORT)" .Values.postgresql.auth.database | quote }}
-            
+
             - name: ALEMBIC_DB_URL
               value: "$(DATABASE_URL)"
 
@@ -61,7 +61,7 @@ spec:
                 sleep 2
                 i=$((i+1))
               done
-              
+
               if [ $i -eq $ATTEMPTS ]; then
                   echo "DB connection failed after timeout."
                   exit 1
@@ -71,12 +71,12 @@ spec:
               echo "Patching alembic.ini with runtime DATABASE_URL..."
               # IMPORTANT: The 'g' flag ensures all instances of 'sqlalchemy.url = ' are replaced.
               sed -i "s|sqlalchemy.url =|sqlalchemy.url = $(DATABASE_URL)|g" geoproject/alembic/alembic.ini
-              
+
               # 3. RUN MIGRATIONS
               echo "Database is ready. Running Alembic migrations."
               # FIX: Remove the problematic -x flag and rely on the patched file
               /usr/local/bin/poetry run alembic -c geoproject/alembic/alembic.ini upgrade head
-              
+
       containers:
         - name: {{ .Chart.Name }}-app
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
@@ -84,9 +84,9 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.app.service.targetPort }}
-          
-          workingDir: /home/user/app 
-          
+
+          workingDir: /home/user/app
+
           command: ["/usr/local/bin/poetry"]
           args: ["run", "uvicorn", "geoproject.main:app", "--host", "0.0.0.0", "--port", "{{ .Values.app.service.targetPort }}"]
 
@@ -119,6 +119,6 @@ spec:
               port: http
             initialDelaySeconds: 15
             periodSeconds: 20
-          
+
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}

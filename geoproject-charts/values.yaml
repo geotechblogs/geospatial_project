@@ -1,6 +1,6 @@
 app:
   image:
-    repository: ahernandez021985987/geoproject    
+    repository: ahernandez021985987/geoproject
     tag: "latest"
     pullPolicy: Always
     replicaCount: 1
@@ -13,14 +13,14 @@ app:
 postgresql:
   postgis:
     enabled: false
-  
+
   existingConfigmap: ""
   image:
     registry: docker.io
     repository: postgis/postgis
-    tag: "14-3.4" 
+    tag: "14-3.4"
     pullPolicy: IfNotPresent
-  
+
   postgresqlUsername: geoproject_user
 
   volumePermissions:
@@ -28,7 +28,7 @@ postgresql:
 
   persistence:
     mountPath: /var/lib/postgresql/data
-  
+
   configuration:
     enabled: false
 
@@ -36,19 +36,19 @@ postgresql:
     database: "geoproject_db"
     username: "geoproject_user"
     password: "password"
-    
+
   primary:
     podSecurityContext:
       enabled: true
-      fsGroup: 999 
+      fsGroup: 999
     podSecurityContext:
       enabled: true
-      fsGroup: 999 
+      fsGroup: 999
     containerSecurityContext:
       enabled: true
       runAsUser: 999
       runAsNonRoot: true
-    
+
     extraEnvVars:
       - name: PGDATA
         value: /var/lib/postgresql/data
