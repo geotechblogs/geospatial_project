@@ -1,0 +1,63 @@
+app:
+  image:
+    repository: ahernandez021985987/geoproject
+    tag: "latest"
+    pullPolicy: Always
+    replicaCount: 1
+
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 8000
+
+postgresql:
+  postgis:
+    enabled: false
+
+  existingConfigmap: ""
+  image:
+    registry: docker.io
+    repository: postgis/postgis
+    tag: "14-3.4"
+    pullPolicy: IfNotPresent
+
+  postgresqlUsername: geoproject_user
+
+  volumePermissions:
+    enabled: false
+
+  persistence:
+    mountPath: /var/lib/postgresql/data
+
+  configuration:
+    enabled: false
+
+  auth:
+    database: "geoproject_db"
+    username: "geoproject_user"
+    password: "password"
+
+  primary:
+    podSecurityContext:
+      enabled: true
+      fsGroup: 999
+    podSecurityContext:
+      enabled: true
+      fsGroup: 999
+    containerSecurityContext:
+      enabled: true
+      runAsUser: 999
+      runAsNonRoot: true
+
+    extraEnvVars:
+      - name: PGDATA
+        value: /var/lib/postgresql/data
+      - name: POSTGRES_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: "{{ .Release.Name }}-postgresql"
+            key: postgres-password
+      - name: POSTGRES_USER
+        value: "geoproject_user"
+      - name: POSTGRES_DB
+        value: "geoproject_db"

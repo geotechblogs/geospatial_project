@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 import multiprocessing
 import tempfile
 from functools import lru_cache
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 load_dotenv()
 
@@ -42,6 +42,7 @@ class ApplicationConfig(BaseSettings):
     model_config = SettingsConfigDict(case_sensitive=False, validate_assignment=True)
 
     # database
+    database_url: Optional[str] = None
     db_user: str = ""
     db_password: str = ""
     db_name: str = "postgres"
@@ -75,6 +76,8 @@ class ApplicationConfig(BaseSettings):
 
     @property
     def db_url(self):
+        if self.database_url:
+            return self.database_url
         return f"postgresql+psycopg2://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
 
 
