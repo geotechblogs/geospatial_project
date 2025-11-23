@@ -38,4 +38,5 @@ repos:
             "sqlalchemy",
             "geoalchemy2",
             "shapely",
+            "pytest",
         ]
