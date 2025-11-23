@@ -20,14 +20,13 @@ def override_get_session() -> Generator[Session, None, None]:
 
 
 @pytest.fixture
-def configured_mock_session() -> None:
+def configured_mock_session():
     def mock_refresh(instance: DBLocations, *args, **kwargs):
         instance.location_id = cast(Column[str], str(uuid.uuid4()))
         instance.timestamp = cast(Column[datetime], datetime.now(timezone.utc))
 
     MOCK_DB_SESSION.reset_mock()
     MOCK_DB_SESSION.refresh.side_effect = mock_refresh
-    return None
 
 
 @pytest.fixture
