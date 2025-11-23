@@ -21,6 +21,10 @@ jobs:
           name: "Run pre-commit"
           command: |
             poetry run pre-commit run --all-files
+      - run:
+          name: "Run tests"
+          command: |
+            poetry run pytest
 
 workflows:
   build-and-test:
