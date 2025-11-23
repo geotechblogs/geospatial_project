@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "geoproject-chart.fullname" . }}-service
+  labels:
+    {{- include "geoproject-chart.labels" . | nindent 4 }}
+    app.kubernetes.io/component: fastapi
+spec:
+  type: {{ .Values.app.service.type }}
+  ports:
+    - port: {{ .Values.app.service.port }}
+      targetPort: {{ .Values.app.service.targetPort }}
+      protocol: TCP
+      name: http
+      {{- if eq .Values.app.service.type "NodePort" }}
+      nodePort: {{ .Values.app.service.nodePort }}
+      {{- end }}
+  selector:
+    {{- include "geoproject-chart.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: fastapi

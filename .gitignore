@@ -43,3 +43,7 @@ poetry.lock
 
 # GitHub App credentials
 gha-creds-*.json
+
+#helm
+*.tgz
+Chart.lock

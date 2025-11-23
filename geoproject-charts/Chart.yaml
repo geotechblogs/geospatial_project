@@ -5,6 +5,5 @@ version: 0.1.0
 
 dependencies:
   - name: postgresql
-    version: "14.2.4" # You can pick a more recent version
+    version: ">=14.0.0 <15.0.0"
     repository: "https://charts.bitnami.com/bitnami"
-    # This dependency will be configured in values.yaml
