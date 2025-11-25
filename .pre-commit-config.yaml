@@ -39,4 +39,11 @@ repos:
             "geoalchemy2",
             "shapely",
             "pytest",
+            "duckdb",
+            "pyarrow",
+            "fsspec",
+            "requests",
+            "country-converter",
+            "geopandas",
+            "shapely",
         ]
