@@ -29,12 +29,12 @@ def get_building_footprints(
     query = db.query(DBBuildingFootprint).filter(
         DBBuildingFootprint.geom.ST_Within(input_geom)
     )
-    if query.count() == 0:
+    if query.first() is None:
         get_open_buildings(geometry.wkt)  # type: ignore
         query = db.query(DBBuildingFootprint).filter(
             DBBuildingFootprint.geom.ST_Within(input_geom)
         )
-    if query.count() == 0:
+    if query.first() is None:
         raise HTTPException(status_code=404, detail="No building footprints found")
     results = query.all()
     building_footprints = []

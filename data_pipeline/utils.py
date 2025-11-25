@@ -6,17 +6,19 @@ import country_converter as coco
 from typing import Optional
 from data_pipeline.constants import COUNTRY_LIST
 
+from loguru import logger
+
 WORLD_BOUNDARIES_URL = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson"
 
 
 @lru_cache(maxsize=1)
 def get_world_boundaries():
-    print("Loading world boundaries into memory...")
+    logger.info("Loading world boundaries into memory...")
     try:
         return gpd.read_file(WORLD_BOUNDARIES_URL)
     except Exception as e:
-        print(f"Error loading boundaries: {e}")
-        return None
+        logger.error(f"Error loading boundaries: {e}")
+        raise e
 
 
 def get_iso3_from_name(country_name: str) -> Optional[str]:
@@ -35,8 +37,9 @@ def get_iso3_from_name(country_name: str) -> Optional[str]:
 
         return iso3_code
 
-    except Exception:
-        return None
+    except Exception as e:
+        logger.error(f"Error converting country name to ISO 3 code: {e}")
+        raise e
 
 
 def get_country_from_aoi(aoi_wkt: str) -> str:
@@ -60,7 +63,8 @@ def get_country_from_aoi(aoi_wkt: str) -> str:
             country_code = "".join(joined.WB_A3.values)
             if country_code in COUNTRY_LIST:
                 return country_code
-        return "Unknown (Ocean or No Match)"
+        raise ValueError("No country found for AOI.")
 
     except Exception as e:
-        return f"Processing Error: {e}"
+        logger.error(f"Error getting country from AOI: {e}")
+        raise e

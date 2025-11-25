@@ -1,26 +1,12 @@
 import duckdb
 from geoproject.core.config import get_settings
-import re
 from typing import Optional, Callable, Generator
 from data_pipeline.constants import OPEN_BUILDINGS_BUCKET, COUNTRY_LIST
 from data_pipeline.utils import get_country_from_aoi
-
+from sqlalchemy.engine.url import make_url
 from loguru import logger
 
 IngestionFunction = Generator[Callable[[str], None], None, None]
-
-
-def get_db_params_from_url(url: str) -> str:
-    conn_params = re.split(r"(?<!/)/", url)
-    params_server = conn_params[1].lstrip("/").split("@")
-    params_auth = params_server[0].split(":")
-    params_network = params_server[1].split(":")
-    db_user = params_auth[0]
-    db_password = params_auth[1]
-    db_host = params_network[0]
-    db_port = params_network[1]
-    db_name = conn_params[-1]
-    return f"dbname={db_name} user={db_user} password={db_password} host={db_host} port={db_port}"
 
 
 def get_spatial_filter_polygon_wkt(filter_polygon_wkt: Optional[str] = None):
@@ -45,7 +31,8 @@ def query_open_buildings(
     settings = get_settings()
     connection_url = settings.db_url
     con = duckdb.connect()
-    pg_conn_string = get_db_params_from_url(connection_url)
+    url = make_url(connection_url)
+    pg_conn_string = f"dbname={url.database} user={url.username} password={url.password} host={url.host} port={url.port}"
 
     # 1. Install/Load Extensions
     con.sql("INSTALL spatial; LOAD spatial;")
@@ -72,7 +59,7 @@ def query_open_buildings(
                 confidence,
                 area_in_meters as area_meters
             FROM read_parquet('{s3_url}')
-            {spatial_filter}) AND (confidence > {confidence} OR confidence IS NULL);"""
+            {spatial_filter} AND (confidence > {confidence} OR confidence IS NULL);"""
         con.sql(query)
         logger.info(f"Successfully loaded buildings for {country_iso} into PostGIS.")
 

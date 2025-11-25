@@ -1,5 +1,4 @@
 import pytest
-import uuid
 from fastapi.testclient import TestClient
 from typing import Dict, Any, Generator
 
@@ -8,7 +7,7 @@ from typing import Dict, Any, Generator
     "building_footprint_request",
     [
         {
-            "geometry": {   
+            "geometry": {
                 "type": "Point",
                 "coordinates": [102.0, 0.5],
             },
@@ -20,7 +19,9 @@ def test_get_all_building_footprints_should_return_correct_location(
     configured_mock_get_all_building_footprints: Generator[None, None, None],
     building_footprint_request: Dict[str, Any],
 ):
-    response = client.post("/api/v1/building_footprints", json=building_footprint_request)
+    response = client.post(
+        "/api/v1/building_footprints", json=building_footprint_request
+    )
     expected_response = building_footprint_request.copy()
     expected_response["location_id"] = 10
     expected_response["confidence"] = 0.5
