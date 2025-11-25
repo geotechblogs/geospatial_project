@@ -5,6 +5,8 @@ from typing import Optional, Callable, Generator
 from data_pipeline.constants import OPEN_BUILDINGS_BUCKET, COUNTRY_LIST
 from data_pipeline.utils import get_country_from_aoi
 
+from loguru import logger
+
 IngestionFunction = Generator[Callable[[str], None], None, None]
 
 
@@ -25,7 +27,7 @@ def get_spatial_filter_polygon_wkt(filter_polygon_wkt: Optional[str] = None):
     spatial_filter = ""
     if filter_polygon_wkt:
         spatial_filter = (
-            f"ST_Intersects(geometry, ST_GeomFromText('{filter_polygon_wkt}'))"
+            f"WHERE ST_Intersects(geometry, ST_GeomFromText('{filter_polygon_wkt}'))"
         )
     return spatial_filter
 
@@ -59,7 +61,7 @@ def query_open_buildings(
     # 2. Attach your Production PostGIS DB
     con.sql(f"ATTACH '{pg_conn_string}' AS prod_db (TYPE POSTGRES);")
     s3_url = f"{OPEN_BUILDINGS_BUCKET}/country_iso={country_iso}/{country_iso}.parquet"
-    print(f"Querying remote Parquet for {country_iso}...")
+    logger.info(f"Querying remote Parquet for {country_iso}...")
     spatial_filter = get_spatial_filter_polygon_wkt(filter_polygon_wkt)
 
     # 4. The "ETL" Query
@@ -70,12 +72,12 @@ def query_open_buildings(
                 confidence,
                 area_in_meters as area_meters
             FROM read_parquet('{s3_url}')
-            WHERE confidence > {confidence} OR confidence IS NULL AND {spatial_filter};"""
+            {spatial_filter}) AND (confidence > {confidence} OR confidence IS NULL);"""
         con.sql(query)
-        print(f"Successfully loaded buildings for {country_iso} into PostGIS.")
+        logger.info(f"Successfully loaded buildings for {country_iso} into PostGIS.")
 
     except Exception as e:
-        print(f"Failed to load buildings for {country_iso}: {e}")
+        logger.error(f"Failed to load buildings for {country_iso}: {e}")
 
     finally:
         con.close()
