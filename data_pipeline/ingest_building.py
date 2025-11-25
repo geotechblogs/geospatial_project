@@ -2,10 +2,11 @@ import duckdb
 from geoproject.core.config import get_settings
 import re
 from typing import Optional, Callable, Generator
-from data_pipeline.constants import OPEN_BUILDINGS_COUNTRIES, OPEN_BUILDINGS_BUCKET, COUNTRY_LIST
+from data_pipeline.constants import OPEN_BUILDINGS_BUCKET, COUNTRY_LIST
 from data_pipeline.utils import get_country_from_aoi
 
 IngestionFunction = Generator[Callable[[str], None], None, None]
+
 
 def get_db_params_from_url(url: str) -> str:
     conn_params = re.split(r"(?<!/)/", url)
@@ -23,7 +24,9 @@ def get_db_params_from_url(url: str) -> str:
 def get_spatial_filter_polygon_wkt(filter_polygon_wkt: Optional[str] = None):
     spatial_filter = ""
     if filter_polygon_wkt:
-        spatial_filter = f"ST_Intersects(geometry, ST_GeomFromText('{filter_polygon_wkt}'))"
+        spatial_filter = (
+            f"ST_Intersects(geometry, ST_GeomFromText('{filter_polygon_wkt}'))"
+        )
     return spatial_filter
 
 
@@ -33,7 +36,9 @@ def query_open_buildings(
 ) -> None:
     country_iso = get_country_from_aoi(filter_polygon_wkt)
     if country_iso not in COUNTRY_LIST:
-        raise ValueError(f"Country {country_iso} is not in the list of countries for Open Buildings.")
+        raise ValueError(
+            f"Country {country_iso} is not in the list of countries for Open Buildings."
+        )
 
     settings = get_settings()
     connection_url = settings.db_url
@@ -74,6 +79,7 @@ def query_open_buildings(
 
     finally:
         con.close()
+
 
 def get_open_buildings_dependency() -> IngestionFunction:
     yield query_open_buildings

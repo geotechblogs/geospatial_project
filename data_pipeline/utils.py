@@ -8,6 +8,7 @@ from data_pipeline.constants import COUNTRY_LIST
 
 WORLD_BOUNDARIES_URL = "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson"
 
+
 @lru_cache(maxsize=1)
 def get_world_boundaries():
     print("Loading world boundaries into memory...")
@@ -27,17 +28,13 @@ def get_iso3_from_name(country_name: str) -> Optional[str]:
         The three-letter ISO 3 code (e.g., "NGA", "TZA"), or None if not found.
     """
     try:
-        iso3_code = coco.convert(
-            names=country_name, 
-            to='ISO3', 
-            not_found=None
-        )
-        
+        iso3_code = coco.convert(names=country_name, to="ISO3", not_found=None)
+
         if iso3_code is None or iso3_code == country_name:
             return None
-            
+
         return iso3_code
-        
+
     except Exception:
         return None
 
@@ -47,7 +44,7 @@ def get_country_from_aoi(aoi_wkt: str) -> str:
     Determines the country for an AOI using pure Python (GeoPandas).
     """
     world_gdf = get_world_boundaries()
-    
+
     if world_gdf is None:
         return "Error: Could not load country data."
 
@@ -62,7 +59,7 @@ def get_country_from_aoi(aoi_wkt: str) -> str:
         if not joined.empty:
             country_code = "".join(joined.WB_A3.values)
             if country_code in COUNTRY_LIST:
-                return country_code    
+                return country_code
         return "Unknown (Ocean or No Match)"
 
     except Exception as e:
