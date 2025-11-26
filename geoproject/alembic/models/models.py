@@ -19,3 +19,17 @@ class Locations(Base):
     geometry = sa.Column(
         Geometry("GEOMETRY", srid=4326, spatial_index=True), nullable=False
     )
+
+
+class BuildingFootprints(Base):
+    __tablename__ = "building_footprints"
+    __table_args__ = {"schema": "public"}
+    id = sa.Column(
+        sa.Integer,
+        primary_key=True,
+    )
+    confidence = sa.Column(sa.Float)
+    area_meters = sa.Column(sa.Float)
+    geometry = sa.Column(
+        Geometry("POLYGON", srid=4326, spatial_index=True), nullable=False
+    )
