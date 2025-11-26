@@ -10,7 +10,7 @@ The application consists of a FastAPI backend service that connects to a Postgre
 graph TD
     User[User / Client] -->|HTTP Requests| API[FastAPI Service]
     API -->|SQL Queries| DB[(PostGIS Database)]
-    
+
     subgraph "Kubernetes Cluster"
         API
         DB
@@ -25,7 +25,7 @@ The project includes a data pipeline for ingesting building footprints from S3 (
 graph LR
     S3[S3 Bucket\nOpen Buildings] -->|Read Parquet| DuckDB[DuckDB\nProcessing]
     DuckDB -->|Insert| DB[(PostGIS Database)]
-    
+
     subgraph "Ingestion Job"
         DuckDB
     end
