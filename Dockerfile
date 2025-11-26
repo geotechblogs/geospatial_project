@@ -23,6 +23,7 @@ COPY ./pyproject.toml pyproject.toml
 COPY ./poetry.lock poetry.lock
 COPY ./README.md README.md
 COPY ./geoproject geoproject
+COPY ./data_pipeline data_pipeline
 
 RUN poetry config virtualenvs.in-project true && \
     poetry install --no-interaction --no-ansi
