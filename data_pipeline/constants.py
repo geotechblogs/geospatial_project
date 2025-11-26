@@ -1,7 +1,7 @@
 from typing import Literal
 
 OPEN_BUILDINGS_BUCKET = "s3://us-west-2.opendata.source.coop/vida/google-microsoft-osm-open-buildings/geoparquet/by_country"
-COUNTRY_LIST_RAW = [
+COUNTRY_LIST = [
     "AFG",
     "AGO",
     "ALB",
@@ -200,5 +200,4 @@ COUNTRY_LIST_RAW = [
     "ZMB",
     "ZWE",
 ]
-COUNTRY_LIST = sorted(list(set(COUNTRY_LIST_RAW)))
 OPEN_BUILDINGS_COUNTRIES = Literal[*COUNTRY_LIST]  # type: ignore
