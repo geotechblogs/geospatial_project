@@ -37,7 +37,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ printf "%s-%s" .Release.Name "postgresql" }}
-                  key: postgres-password
+                  key: password
             - name: DATABASE_URL
               value: {{ printf "postgresql://%s:%s@%s:%s/%s" .Values.postgresql.auth.username "$(DB_PASSWORD)" "$(DB_HOST)" "$(DB_PORT)" .Values.postgresql.auth.database | quote }}
 
@@ -103,7 +103,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ printf "%s-%s" .Release.Name "postgresql" }}
-                  key: postgres-password
+                  key: password
             - name: DATABASE_URL
               value: {{ printf "postgresql://%s:%s@%s:%s/%s" .Values.postgresql.auth.username "$(DB_PASSWORD)" "$(DB_HOST)" "$(DB_PORT)" .Values.postgresql.auth.database | quote }}
 

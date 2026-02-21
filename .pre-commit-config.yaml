@@ -47,3 +47,9 @@ repos:
             "geopandas",
             "shapely",
         ]
+  - repo: https://github.com/ducminh-phan/reformat-gherkin
+    rev: v3.0.1
+    hooks:
+      - id: reformat-gherkin
+        name: reformat-gherkin
+        types: [gherkin]
