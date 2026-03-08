@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 from data_pipeline.ingest_building import (
     get_bbox_from_wkt,
@@ -72,7 +72,12 @@ class TestQueryOpenBuildings:
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     @patch("data_pipeline.ingest_building.duckdb.connect")
     def test_etl_query_contains_latitude_bbox_filter(
-        self, mock_connect, mock_get_country, mock_get_settings, duckdb_con, fake_settings
+        self,
+        mock_connect,
+        mock_get_country,
+        mock_get_settings,
+        duckdb_con,
+        fake_settings,
     ):
         mock_connect.return_value = duckdb_con
         mock_get_country.return_value = "MEX"
@@ -87,7 +92,12 @@ class TestQueryOpenBuildings:
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     @patch("data_pipeline.ingest_building.duckdb.connect")
     def test_etl_query_contains_longitude_bbox_filter(
-        self, mock_connect, mock_get_country, mock_get_settings, duckdb_con, fake_settings
+        self,
+        mock_connect,
+        mock_get_country,
+        mock_get_settings,
+        duckdb_con,
+        fake_settings,
     ):
         mock_connect.return_value = duckdb_con
         mock_get_country.return_value = "MEX"
@@ -102,7 +112,12 @@ class TestQueryOpenBuildings:
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     @patch("data_pipeline.ingest_building.duckdb.connect")
     def test_etl_query_bbox_values_match_aoi_bounds(
-        self, mock_connect, mock_get_country, mock_get_settings, duckdb_con, fake_settings
+        self,
+        mock_connect,
+        mock_get_country,
+        mock_get_settings,
+        duckdb_con,
+        fake_settings,
     ):
         mock_connect.return_value = duckdb_con
         mock_get_country.return_value = "MEX"
@@ -121,7 +136,12 @@ class TestQueryOpenBuildings:
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     @patch("data_pipeline.ingest_building.duckdb.connect")
     def test_etl_query_still_contains_st_intersects(
-        self, mock_connect, mock_get_country, mock_get_settings, duckdb_con, fake_settings
+        self,
+        mock_connect,
+        mock_get_country,
+        mock_get_settings,
+        duckdb_con,
+        fake_settings,
     ):
         mock_connect.return_value = duckdb_con
         mock_get_country.return_value = "MEX"
@@ -136,7 +156,12 @@ class TestQueryOpenBuildings:
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     @patch("data_pipeline.ingest_building.duckdb.connect")
     def test_bbox_filter_appears_before_st_intersects(
-        self, mock_connect, mock_get_country, mock_get_settings, duckdb_con, fake_settings
+        self,
+        mock_connect,
+        mock_get_country,
+        mock_get_settings,
+        duckdb_con,
+        fake_settings,
     ):
         mock_connect.return_value = duckdb_con
         mock_get_country.return_value = "MEX"
@@ -158,7 +183,12 @@ class TestQueryOpenBuildings:
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     @patch("data_pipeline.ingest_building.duckdb.connect")
     def test_connection_is_closed_on_success(
-        self, mock_connect, mock_get_country, mock_get_settings, duckdb_con, fake_settings
+        self,
+        mock_connect,
+        mock_get_country,
+        mock_get_settings,
+        duckdb_con,
+        fake_settings,
     ):
         mock_connect.return_value = duckdb_con
         mock_get_country.return_value = "MEX"
@@ -172,15 +202,22 @@ class TestQueryOpenBuildings:
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     @patch("data_pipeline.ingest_building.duckdb.connect")
     def test_connection_is_closed_on_etl_error(
-        self, mock_connect, mock_get_country, mock_get_settings, duckdb_con, fake_settings
+        self,
+        mock_connect,
+        mock_get_country,
+        mock_get_settings,
+        duckdb_con,
+        fake_settings,
     ):
         mock_connect.return_value = duckdb_con
         mock_get_country.return_value = "MEX"
         mock_get_settings.return_value = fake_settings
         # Make the INSERT call raise
-        duckdb_con.sql.side_effect = lambda q: (_ for _ in ()).throw(
-            Exception("DuckDB failure")
-        ) if "INSERT INTO" in q else None
+        duckdb_con.sql.side_effect = (
+            lambda q: (_ for _ in ()).throw(Exception("DuckDB failure"))
+            if "INSERT INTO" in q
+            else None
+        )
 
         query_open_buildings(MEXICO_CITY_AOI_WKT)  # should not propagate
 
