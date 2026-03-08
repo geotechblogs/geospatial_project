@@ -86,7 +86,7 @@ class TestQueryOpenBuildings:
         query_open_buildings(MEXICO_CITY_AOI_WKT)
 
         etl_query = self._get_etl_query(duckdb_con)
-        assert "latitude BETWEEN" in etl_query
+        assert "ST_YMax(geometry) >=" in etl_query
 
     @patch("data_pipeline.ingest_building.get_settings")
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
@@ -106,7 +106,7 @@ class TestQueryOpenBuildings:
         query_open_buildings(MEXICO_CITY_AOI_WKT)
 
         etl_query = self._get_etl_query(duckdb_con)
-        assert "longitude BETWEEN" in etl_query
+        assert "ST_XMax(geometry) >=" in etl_query
 
     @patch("data_pipeline.ingest_building.get_settings")
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
@@ -170,7 +170,9 @@ class TestQueryOpenBuildings:
         query_open_buildings(MEXICO_CITY_AOI_WKT)
 
         etl_query = self._get_etl_query(duckdb_con)
-        assert etl_query.index("latitude BETWEEN") < etl_query.index("ST_Intersects")
+        assert etl_query.index("ST_YMax(geometry) >=") < etl_query.index(
+            "ST_Intersects"
+        )
 
     @patch("data_pipeline.ingest_building.get_country_from_aoi")
     def test_raises_value_error_for_unsupported_country(self, mock_get_country):
