@@ -33,6 +33,12 @@ dependencies = [
 ]
 
 
+[tool.poetry]
+packages = [
+    { include = "geoproject" },
+    { include = "data_pipeline" }
+]
+
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
@@ -50,4 +56,6 @@ ignore_errors = true
 ignore_errors = true
 
 [tool.pytest.ini_options]
+pythonpath = "."
+testpaths = ["tests"]
 bdd_features_base_dir = "tests/bdd/features/"
